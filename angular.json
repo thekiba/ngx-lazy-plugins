@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ngx-lazy-plugins": {
+    "ng-lazy-plugins": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/ngx-lazy-plugins",
+            "outputPath": "dist/ng-lazy-plugins",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -55,18 +55,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ngx-lazy-plugins:build"
+            "browserTarget": "ng-lazy-plugins:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "ngx-lazy-plugins:build:production"
+              "browserTarget": "ng-lazy-plugins:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ngx-lazy-plugins:build"
+            "browserTarget": "ng-lazy-plugins:build"
           }
         },
         "test": {
@@ -100,7 +100,7 @@
         }
       }
     },
-    "ngx-lazy-plugins-e2e": {
+    "ng-lazy-plugins-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "architect": {
@@ -108,11 +108,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "ngx-lazy-plugins:serve"
+            "devServerTarget": "ng-lazy-plugins:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "ngx-lazy-plugins:serve:production"
+              "devServerTarget": "ng-lazy-plugins:serve:production"
             }
           }
         },
@@ -128,5 +128,5 @@
       }
     }
   },
-  "defaultProject": "ngx-lazy-plugins"
+  "defaultProject": "ng-lazy-plugins"
 }

@@ -13,7 +13,7 @@ import { AppComponent } from './app.component';
     BrowserModule,
     CommonModule,
     // Needed for NgModuleFactoryLoader
-    RouterModule.forRoot([])
+    RouterModule.forRoot([ { path: 'mock', loadChildren: './mock.module#MockModule' } ])
   ],
   providers: [],
   bootstrap: [AppComponent]
