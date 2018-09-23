@@ -21,9 +21,9 @@ projects.APP.architect.build.configurations.production = {
 }
 
 // you must add each plug-in to this list
-projects.APP.architect.build.options = {
+projects.APP.architect.build.options = [
     "src/plugins/example/example.module.ts"
-}
+]
 ```
 
 Next, you need to create a plugin
