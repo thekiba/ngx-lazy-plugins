@@ -6,7 +6,6 @@ const LAZY_MODULE_URL = 'src-plugins-example-example-module-ts-ngfactory#Example
 const LAZY_MODULE_NAME = './src/plugins/example/example.module.ngfactory.js';
 
 declare const __webpack_require__: any;
-declare const __webpack_exports__: any;
 
 const _SEPARATOR = '#';
 const FACTORY_CLASS_SUFFIX = 'NgFactory';
@@ -15,8 +14,6 @@ const DEFAULT_CONFIG = {
   factoryPathPrefix: '',
   factoryPathSuffix: '',
 };
-
-const lazy_route_resource = './src/$$_lazy_route_resource lazy recursive';
 
 function loadFactory(path) {
   console.log(path);
@@ -71,8 +68,8 @@ export class AppComponent implements AfterViewInit {
 
   constructor(
     private injector: Injector,
-    private ngModuleFactoryLoader: DynamicModuleFactoryLoader
-    // private router: Router
+    private ngModuleFactoryLoader: DynamicModuleFactoryLoader,
+    private router: Router
   ) { }
 
   ngAfterViewInit() {
@@ -84,8 +81,12 @@ export class AppComponent implements AfterViewInit {
         this.component = ngModuleRef.injector.get(PLUGIN_PROVIDER);
 
         // Attach router config
-        // const routes: Route[][] = ngModuleRef.injector.get(ROUTES);
-        // this.router.resetConfig(routes.concat.apply([], routes));
+        const routes: Route[][] = ngModuleRef.injector.get(ROUTES);
+        this.router.resetConfig([
+          ...this.router.config,
+          { path: 'lazy', loadChildren: LAZY_MODULE_URL }
+          // routes.concat.apply([], routes)
+        ]);
       });
   }
 }

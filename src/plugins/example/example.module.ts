@@ -6,7 +6,7 @@ import { PLUGIN_PROVIDER } from 'src/core';
     selector: 'example-plugin',
     template: `
         <h1>Hello World! I'm plugin! And i recompiled!</h1>
-        <a [routerLink]="'/hello'">Go to link</a>
+        <a [routerLink]="'/lazy/hello'">Go to link</a>
     `
 })
 export class ExamplePluginComponent { }
