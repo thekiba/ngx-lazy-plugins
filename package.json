@@ -7,7 +7,9 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "build:app": "ng build --prod",
+    "build:plugin": "ng build --prod ng-lazy-plugins-example"
   },
   "private": true,
   "dependencies": {
