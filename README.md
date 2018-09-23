@@ -1,27 +1,93 @@
-# NgLazyPlugins
+# NgxLazyPlugins
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.2.3.
+LazyLoading + AOT + Recompile modules = Super Lazy Reusable Plugins
 
-## Development server
+## How its works
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Firstly, you need to configure the application assembly
 
-## Code scaffolding
+angular.json
+```js
+// you must turn off all optimizations so that you do not break the plugins
+projects.APP.architect.build.configurations.production = {
+    ...,
+    "outputHashing": "none", // for easy management of plugins 
+    "namedChunks": true, // for easy management of plugins 
+    "optimization": false, // disabled tree shaking
+    "commonChunk": false, // disabled chunk of chunks :)
+    "preserveSymlinks": true, // for to use dependencies in plugins
+    "vendorChunk": false,
+    "buildOptimizer": true
+}
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+// you must add each plug-in to this list
+projects.APP.architect.build.options = {
+    "src/plugins/example/example.module.ts"
+}
+```
 
-## Build
+Next, you need to create a plugin
+```typescript
+// You must use the token to provide the component to the main application
+import { PLUGIN_PROVIDER } from 'src/core';
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+@Component({
+    selector: 'example-plugin',
+    template: `
+        <h1>Hello World! I'm plugin! And i recompiled!</h1>
+        <a [routerLink]="'/hello'">Go to link</a>
+    `
+})
+export class ExamplePluginComponent { }
 
-## Running unit tests
+@NgModule({
+    imports: [
+        // dosent work yet
+        RouterModule.forChild([ {
+            path: 'hello', component: ExamplePluginComponent
+        } ])
+    ],
+    declarations: [ExamplePluginComponent],
+    providers: [
+        // alias for entryComponents: []
+        {
+            provide: ANALYZE_FOR_ENTRY_COMPONENTS,
+            useValue: ExamplePluginComponent,
+            multi: true
+        },
+        // provide component by token
+        {
+            provide: PLUGIN_PROVIDER,
+            useValue: ExamplePluginComponent
+        }
+    ]
+})
+export class ExamplePluginModule { }
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+You must use NgModuleFactoryLoader to load the plugin
+```typescript
+import { PLUGIN_PROVIDER } from 'src/core';
+// you must specify a url to load the module
+const LAZY_MODULE_URL = 'src/plugins/example/example.module.ts#ExamplePluginModule';
 
-## Running end-to-end tests
+@Component({...})
+export class AppComponent implements AfterViewInit {
+  constructor(
+    private injector: Injector,
+    private ngModuleFactoryLoader: NgModuleFactoryLoader
+  ) {
+    // loading a lazy module, its your plugin
+    this.ngModuleFactoryLoader.load(LAZY_MODULE_URL)
+      .then((ngModuleFactory: NgModuleFactory<any>) => {
+        // create NgModule Reference and get component
+        const ngModuleRef: NgModuleRef<any> = ngModuleFactory.create(this.injector);
+        // receiving component if necessary
+        const component: Type<any> = ngModuleRef.injector.get(PLUGIN_PROVIDER);
+      });
+  }
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+}
+```
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+After all this, you can safely re-build plugins.
