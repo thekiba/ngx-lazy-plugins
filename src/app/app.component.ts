@@ -24,7 +24,7 @@ export class AppComponent implements AfterViewInit {
   ) { }
 
   ngAfterViewInit() {
-    console.log(this.ngModuleFactoryLoader);
+    // console.log(this.ngModuleFactoryLoader);
     this.ngModuleFactoryLoader.load(`${LAZY_MODULE_URL}#${LAZY_MODULE_NAME}`)
       .then((ngModuleFactory: NgModuleFactory<any>) => {
         this.ngModuleFactory = ngModuleFactory;
@@ -33,10 +33,12 @@ export class AppComponent implements AfterViewInit {
 
         // Attach router config
         const routes: Route[][] = ngModuleRef.injector.get(ROUTES);
+        console.log(this.router.config);
         this.router.resetConfig([
           ...this.router.config,
           { path: 'lazy', loadChildren: LAZY_MODULE_URL }
         ]);
+        console.log(this.router.config);
       });
   }
 }

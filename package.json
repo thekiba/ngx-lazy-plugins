@@ -8,6 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "build:core": "ng build @ngx-lazy/core",
     "build:app": "ng build --prod",
     "build:plugin": "ng build --prod ng-lazy-plugins-example"
   },
@@ -22,6 +23,11 @@
     "@angular/platform-browser": "^6.1.0",
     "@angular/platform-browser-dynamic": "^6.1.0",
     "@angular/router": "^6.1.0",
+    "@clr/angular": "^0.13.2",
+    "@clr/icons": "^0.13.2",
+    "@clr/ui": "^0.13.2",
+    "@ngrx/store": "^6.1.0",
+    "@webcomponents/custom-elements": "^1.0.0",
     "core-js": "^2.5.4",
     "rxjs": "~6.2.0",
     "systemjs": "^2.0.0-alpha.1",
@@ -29,6 +35,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.8.0",
+    "@angular-devkit/build-ng-packagr": "~0.8.0",
     "@angular/cli": "~6.2.3",
     "@angular/compiler-cli": "^6.1.0",
     "@angular/language-service": "^6.1.0",
@@ -43,8 +50,11 @@
     "karma-coverage-istanbul-reporter": "~2.0.1",
     "karma-jasmine": "~1.1.2",
     "karma-jasmine-html-reporter": "^0.2.2",
+    "ng-packagr": "^4.1.0",
     "protractor": "~5.4.0",
     "ts-node": "~7.0.0",
+    "tsickle": ">=0.29.0",
+    "tslib": "^1.9.0",
     "tslint": "~5.11.0",
     "typescript": "~2.9.2"
   }

@@ -1,0 +1,35 @@
+
+<div class="main-container">
+    <header class="header">
+        <div class="branding">
+            <a routerLink="" style="color: #fff">
+                <span class="title">Project Pokémon</span>
+            </a>
+        </div>
+        <div class="header-actions">
+            <a (click)="showmenu = true" class="nav-link nav-text" style="cursor:pointer">
+                Plugins
+            </a>
+        </div>
+    </header>
+    <div class="content-container">
+        <div class="content-area">
+            <router-outlet></router-outlet>
+        </div>
+        <clr-vertical-nav>
+            <a clrVerticalNavLink routerLink="/lazy/hello">Example</a>
+            <a *ngFor="let link of links" clrVerticalNavLink [routerLink]="link.route" routerLinkActive="active">{{link.title}}</a>
+        </clr-vertical-nav>
+    </div>
+</div>
+
+<clr-modal [(clrModalOpen)]="showmenu">
+        <h3 class="modal-title">Load plugins</h3>
+        <div class="modal-body">
+            <p>But not much to say...</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline" (click)="showmenu = false">Cancel</button>
+            <button type="button" class="btn btn-primary" (click)="dis()">Ok</button>
+        </div>
+</clr-modal>

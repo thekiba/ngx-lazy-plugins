@@ -16,6 +16,14 @@
     "lib": [
       "es2017",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@ngx-lazy/core": [
+        "dist/ngx-lazy/core"
+      ],
+      "@ngx-lazy/core/*": [
+        "dist/ngx-lazy/core/*"
+      ]
+    }
   }
 }
