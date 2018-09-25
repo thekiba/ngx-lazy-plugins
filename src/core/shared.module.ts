@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { ToolbarService } from './toolbar.service';
+import { ToolbarService } from './services/toolbar.service';
 
 @NgModule({})
 export class CoreSharedModule {

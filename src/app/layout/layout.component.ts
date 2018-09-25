@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, Optional } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ToolbarService } from 'src/core';
+import { LoaderService } from '../loader.service';
 
 @Component({
     selector: 'app-layout',
@@ -10,7 +11,10 @@ export class LayoutComponent implements OnInit, OnDestroy {
     showmenu = false;
     links = [];
     sub: Subscription;
-    constructor(@Optional() private toolbarService: ToolbarService) {
+    name: string;
+    url: string;
+    constructor(private toolbarService: ToolbarService,
+    private loader: LoaderService) {
     }
     ngOnInit() {
         this.sub = this.toolbarService.toolbar$.subscribe(data => {
@@ -19,5 +23,8 @@ export class LayoutComponent implements OnInit, OnDestroy {
     }
     ngOnDestroy() {
         this.sub.unsubscribe();
+    }
+    load(url: string, name: string) {
+        this.loader.load(url, name);
     }
 }
