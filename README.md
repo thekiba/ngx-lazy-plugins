@@ -28,8 +28,8 @@ projects.APP.architect.build.options.lazyModules = [
 ]
 ```
 
-For example, in our angular.json there are two configuration configurations for the application.
-One without plug-ins, and the other with plug-ins.
+For example, in our angular.json there are two configurations of the application.
+`ng-lazy-plugins` without plug-ins, and `ng-lazy-plugins-example` with plug-ins.
 ```json
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
