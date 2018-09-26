@@ -8,6 +8,8 @@ import { AppComponent } from './app.component';
 import { LayoutComponent } from './layout/layout.component';
 import { CoreSharedModule } from '../core/shared.module';
 import { LoaderService } from './loader.service';
+import { PluginsService } from './service/plugins.service';
+import { CartService } from 'src/core';
 
 @NgModule({
     declarations: [
@@ -23,7 +25,7 @@ import { LoaderService } from './loader.service';
         // Needed for NgModuleFactoryLoader
         RouterModule.forRoot([{ path: 'mock', loadChildren: './mock.module#MockModule' }])
     ],
-    providers: [LoaderService],
+    providers: [LoaderService, PluginsService, CartService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

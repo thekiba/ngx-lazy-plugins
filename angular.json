@@ -122,7 +122,8 @@
             "scripts": [],
             "lazyModules": [
               "src/plugins/example/example.module.ts",
-              "src/plugins/example2/example2.module.ts"
+              "src/plugins/cartadd/cartadd.module.ts",
+              "src/plugins/cartremove/cartremove.module.ts"
             ]
           },
           "configurations": {

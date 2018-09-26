@@ -1,8 +1,8 @@
 import { Component, Type, AfterViewInit } from '@angular/core';
 import { LoaderService } from './loader.service';
 
-const LAZY_MODULE_URL = 'src-plugins-example-example-module-ts-ngfactory#ExamplePluginModule';
-const LAZY_MODULE_NAME = './src/plugins/example/example.module.ngfactory.js';
+// const LAZY_MODULE_URL = 'src-plugins-example-example-module-ts-ngfactory#ExamplePluginModule';
+// const LAZY_MODULE_NAME = './src/plugins/example/example.module.ngfactory.js';
 
 
 @Component({

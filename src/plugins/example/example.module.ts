@@ -3,20 +3,17 @@ import { RouterModule } from '@angular/router';
 import { PLUGIN_PROVIDER, ToolbarService, CoreSharedModule } from 'src/core';
 
 // Init
-// tslint:disable-next-line:no-unused-expression
-((e: any) => {
+(() => {
     window.dispatchEvent(new CustomEvent('ngxlazy.newtoolbar', {
         bubbles: true,
-        detail: {route: '/lazy/hello', title: 'test'}
+        detail: {route: '/lazy/hello', title: 'Hello plugin'}
     }));
-});
+})();
 
 @Component({
-    selector: 'example-plugin',
+    selector: 'app-example-plugin',
     template: `
         <h1>Hello World! I'm plugin! And i recompiled!</h1>
-        <button class="btn btn-outline">Add</button>
-        <a [routerLink]="'/lazy/hello'">Go to link</a>
     `
 })
 export class ExamplePluginComponent {

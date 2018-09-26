@@ -2,7 +2,9 @@
     <header class="header">
         <div class="branding">
             <a routerLink="" style="color: #fff">
-                <span class="title">Project Pokémon</span>
+                <span class="title">Project 
+                    <span *ngIf="cartItems?.length">{{cartItems.length}}</span>
+                </span>
             </a>
         </div>
         <div class="header-actions">
@@ -16,7 +18,6 @@
             <router-outlet></router-outlet>
         </div>
         <clr-vertical-nav>
-            <a clrVerticalNavLink routerLink="/lazy/hello">Example</a>
             <a *ngFor="let link of links" clrVerticalNavLink [routerLink]="link.route" routerLinkActive="active">{{link.title}}</a>
         </clr-vertical-nav>
     </div>
@@ -25,14 +26,30 @@
 <clr-modal [(clrModalOpen)]="showmenu">
     <h3 class="modal-title">Load plugins</h3>
     <div class="modal-body">
+        <p>Available</p>
+        <div *ngFor="let item of plugins" class="plugin">
+            <div style="display: flex">
+                <img src="/assets/puzzle.png" alt="" style="height: 45px;width: auto;opacity:0.2">
+                <div style="margin-left: 15px">
+                    <b>{{item.title}}</b>
+                    <br> {{item.description}}
+                </div>
+            </div>
+            <button class="btn btn-info" (click)="load(item.url, item.name)">Load</button>
+        </div>
+
+        <p>Specific plugin</p>
         <form clrForm>
             <input clrInput placeholder="name" name="name" [(ngModel)]="name" />
             <br>
             <input clrInput placeholder="url" name="url" [(ngModel)]="url" />
+            <br>
+            <button type="button" class="btn btn-primary" (click)="load(name, url)">Load</button>
         </form>
     </div>
+
+
     <div class="modal-footer">
         <button type="button" class="btn btn-outline" (click)="showmenu = false">Cancel</button>
-        <button type="button" class="btn btn-primary" (click)="load(name, url)">Ok</button>
     </div>
 </clr-modal>
