@@ -8,9 +8,9 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build:core": "ng build @ngx-lazy/core",
     "build:app": "ng build --prod",
-    "build:plugin": "ng build --prod ng-lazy-plugins-example"
+    "build:plugin": "ng build --prod ng-lazy-plugins-example",
+    "build:demo": "ng build --output-path demo --base-href '/demo' --prod ng-lazy-plugins-example"
   },
   "private": true,
   "dependencies": {
