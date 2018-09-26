@@ -10,7 +10,7 @@
     "e2e": "ng e2e",
     "build:app": "ng build --prod",
     "build:plugin": "ng build --prod ng-lazy-plugins-example",
-    "build:demo": "ng build --output-path demo --base-href '/demo' --prod ng-lazy-plugins-example"
+    "build:demo": "ng build --output-path demo --base-href '/demo/ngx-lazy-plugins/' --prod ng-lazy-plugins-example"
   },
   "private": true,
   "dependencies": {
