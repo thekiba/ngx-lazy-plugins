@@ -1,16 +1,11 @@
-import { Component, Type, Injector, NgModuleRef, AfterViewInit, NgModuleFactory } from '@angular/core';
-import { Router, Route, ROUTES } from '@angular/router';
-import { PLUGIN_PROVIDER } from 'src/core';
-import { DynamicModuleFactoryLoader } from '../core/ng_dynamic_factory_loader';
-
-const LAZY_MODULE_URL = 'src-plugins-example-example-module-ts-ngfactory#ExamplePluginModule';
-const LAZY_MODULE_NAME = './src/plugins/example/example.module.ngfactory.js';
-
+import { AfterViewInit, Component, Injector, NgModuleFactory, NgModuleRef, Type } from '@angular/core';
+import { Router } from '@angular/router';
+import { PLUGIN_PROVIDER, DynamicNgModuleFactoryLoader, PluginManifest } from 'src/core';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: [ './app.component.css' ]
 })
 export class AppComponent implements AfterViewInit {
   title = 'ngx-lazy-plugins';
@@ -19,24 +14,30 @@ export class AppComponent implements AfterViewInit {
 
   constructor(
     private injector: Injector,
-    private ngModuleFactoryLoader: DynamicModuleFactoryLoader,
+    private ngModuleFactoryLoader: DynamicNgModuleFactoryLoader,
     private router: Router
-  ) { }
+  ) {}
 
   ngAfterViewInit() {
-    console.log(this.ngModuleFactoryLoader);
-    this.ngModuleFactoryLoader.load(`${LAZY_MODULE_URL}#${LAZY_MODULE_NAME}`)
-      .then((ngModuleFactory: NgModuleFactory<any>) => {
-        this.ngModuleFactory = ngModuleFactory;
-        const ngModuleRef: NgModuleRef<any> = ngModuleFactory.create(this.injector);
-        this.component = ngModuleRef.injector.get(PLUGIN_PROVIDER);
+    const manifest = new PluginManifest({
+      id: './src/plugins/example/example.module',
+      name: 'ExamplePluginModule',
+      path: 'src-plugins-example-example-module-ts-ngfactory'
+    });
 
-        // Attach router config
-        const routes: Route[][] = ngModuleRef.injector.get(ROUTES);
-        this.router.resetConfig([
-          ...this.router.config,
-          { path: 'lazy', loadChildren: LAZY_MODULE_URL }
-        ]);
-      });
+    this.ngModuleFactoryLoader.load(manifest.importUrl)
+        .then((ngModuleFactory: NgModuleFactory<any>) => {
+          this.ngModuleFactory = ngModuleFactory;
+          const ngModuleRef: NgModuleRef<any> = ngModuleFactory.create(this.injector);
+
+          // We can resolve by any provider from lazy loaded module
+          this.component = ngModuleRef.injector.get(PLUGIN_PROVIDER);
+
+          // And we can attach routes from lazy loaded module
+          this.router.resetConfig([
+            ...this.router.config,
+            { path: 'lazy', loadChildren: () => ngModuleFactory }
+          ]);
+        });
   }
 }

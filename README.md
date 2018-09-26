@@ -4,6 +4,8 @@ LazyLoading + AOT + Recompile modules = Super Lazy Reusable Plugins
 
 ## How its works
 
+### angular.json hacks
+
 Firstly, you need to configure the application assembly
 
 angular.json
@@ -21,10 +23,26 @@ projects.APP.architect.build.configurations.production = {
 }
 
 // you must add each plug-in to this list
-projects.APP.architect.build.options = [
-    "src/plugins/example/example.module.ts"
+projects.APP.architect.build.options.lazyModules = [
+    "./src/plugins/example/example.module.ts"
 ]
 ```
+
+For example, in our angular.json there are two configuration configurations for the application.
+One without plug-ins, and the other with plug-ins.
+```json
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "ng-lazy-plugins": { ... },
+    "ng-lazy-plugins-example": { ... }
+  }
+}
+```
+
+### Example of plugin
 
 Next, you need to create a plugin
 ```typescript
@@ -32,62 +50,78 @@ Next, you need to create a plugin
 import { PLUGIN_PROVIDER } from 'src/core';
 
 @Component({
-    selector: 'example-plugin',
-    template: `
-        <h1>Hello World! I'm plugin! And i recompiled!</h1>
-        <a [routerLink]="'/hello'">Go to link</a>
-    `
+  selector: 'example-plugin',
+  template: `
+    <h1>Hello World! I'm plugin! And i recompiled!</h1>
+    <a [routerLink]="'/lazy/hello'">Go to link</a>
+  `
 })
-export class ExamplePluginComponent { }
+export class ExamplePluginComponent {}
 
 @NgModule({
-    imports: [
-        // dosent work yet
-        RouterModule.forChild([ {
-            path: 'hello', component: ExamplePluginComponent
-        } ])
-    ],
-    declarations: [ExamplePluginComponent],
-    providers: [
-        // alias for entryComponents: []
-        {
-            provide: ANALYZE_FOR_ENTRY_COMPONENTS,
-            useValue: ExamplePluginComponent,
-            multi: true
-        },
-        // provide component by token
-        {
-            provide: PLUGIN_PROVIDER,
-            useValue: ExamplePluginComponent
-        }
-    ]
+  imports: [
+    RouterModule.forChild([
+      {
+        path: 'hello',
+        component: ExamplePluginComponent
+      }
+    ])
+  ],
+  declarations: [ ExamplePluginComponent ],
+  providers: [
+    {
+      provide: PLUGIN_PROVIDER,
+      useValue: ExamplePluginComponent
+    }
+  ]
 })
-export class ExamplePluginModule { }
+export class ExamplePluginModule {}
 ```
 
-You must use NgModuleFactoryLoader to load the plugin
+### Using DynamicNgModuleFactoryLoader to download plugins
+
+You must use DynamicNgModuleFactoryLoader to load the plugin
 ```typescript
-import { PLUGIN_PROVIDER } from 'src/core';
-// you must specify a url to load the module
-const LAZY_MODULE_URL = 'src/plugins/example/example.module.ts#ExamplePluginModule';
+import { DynamicNgModuleFactoryLoader, PLUGIN_PROVIDER, PluginManifest } from 'src/core';
 
 @Component({...})
-export class AppComponent implements AfterViewInit {
+export class AppComponent {
   constructor(
     private injector: Injector,
-    private ngModuleFactoryLoader: NgModuleFactoryLoader
+    private ngModuleFactoryLoader: DynamicNgModuleFactoryLoader
   ) {
+    // you must specify a manifest to load the module
+    const manifest: PluginManifest = new PluginManifest({
+      id: './src/plugins/example/example.module',
+      name: 'ExamplePluginModule',
+      path: 'src-plugins-example-example-module-ts-ngfactory'
+    });
+
     // loading a lazy module, its your plugin
-    this.ngModuleFactoryLoader.load(LAZY_MODULE_URL)
-      .then((ngModuleFactory: NgModuleFactory<any>) => {
-        // create NgModule Reference and get component
-        const ngModuleRef: NgModuleRef<any> = ngModuleFactory.create(this.injector);
-        // receiving component if necessary
-        const component: Type<any> = ngModuleRef.injector.get(PLUGIN_PROVIDER);
-      });
+    this.ngModuleFactoryLoader.load(manifest.importUrl)
+        .then((ngModuleFactory: NgModuleFactory<any>) => {
+          this.ngModuleFactory = ngModuleFactory;
+  
+          // Create ng module reference
+          const ngModuleRef: NgModuleRef<any> = ngModuleFactory.create(this.injector);
+  
+          // We can resolve by any provider from lazy loaded module
+          this.component = ngModuleRef.injector.get(PLUGIN_PROVIDER);
+  
+          // And we can attach routes from lazy loaded module
+          this.router.resetConfig([
+            ...this.router.config,
+            { path: 'lazy', loadChildren: () => ngModuleFactory }
+          ]);
+        });
   }
 
 }
 ```
 
-After all this, you can safely re-build plugins.
+After all this, you can safely re-build plugins via `npm build ng-lazy-plugins-example --prod`.
+You will get the compiled plugins in the directory with the build:
+ + src-plugins-example-example-module-ts-ngfactory.js
+ + src-plugins-example2-example2-module-ts-ngfactory.js
+
+Just put them in the folder with your application.

@@ -1,6 +1,6 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
@@ -12,10 +12,14 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule,
     CommonModule,
-    // Needed for NgModuleFactoryLoader
-    RouterModule.forRoot([ { path: 'mock', loadChildren: './mock.module#MockModule' } ])
+
+    // Needed for NgModuleFactoryLoader and __webpack_require__
+    RouterModule.forRoot(
+      [ { path: 'mock', loadChildren: './mock.module#MockModule' } ],
+      { initialNavigation: 'enabled' }
+    )
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [ AppComponent ]
 })
-export class AppModule { }
+export class AppModule {}
