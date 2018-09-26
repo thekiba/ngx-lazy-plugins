@@ -1,7 +1,7 @@
 import { NgModuleFactoryLoader, Injectable, NgModuleFactory } from '@angular/core';
 
 /**
- * This is necessary for loading lazy modules using webpack require ensure.
+ * This is necessary for loading lazy modules using webpack require.ensure().
  * And also we do not need to use the functions from the webpack. This is just an example.
  */
 declare const __webpack_require__: any;

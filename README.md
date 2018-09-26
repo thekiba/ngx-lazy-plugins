@@ -2,33 +2,33 @@
 
 LazyLoading + AOT + Recompile modules = Super Lazy Reusable Plugins
 
-## How its works
+## How it works
 
 ### angular.json hacks
 
-Firstly, you need to configure the application assembly
+Firstly, you need to configure the app build
 
 angular.json
 ```js
-// you must turn off all optimizations so that you do not break the plugins
+// you should turn off all optimizations so that you do not break the plugins
 projects.APP.architect.build.configurations.production = {
     ...,
     "outputHashing": "none", // for easy management of plugins 
     "namedChunks": true, // for easy management of plugins 
     "optimization": false, // disabled tree shaking
     "commonChunk": false, // disabled chunk of chunks :)
-    "preserveSymlinks": true, // for to use dependencies in plugins
+    "preserveSymlinks": true, // for using dependencies in plugins
     "vendorChunk": false,
     "buildOptimizer": true
 }
 
-// you must add each plug-in to this list
+// you should add each plug-in to this list
 projects.APP.architect.build.options.lazyModules = [
     "./src/plugins/example/example.module.ts"
 ]
 ```
 
-For example, in our angular.json there are two configurations of the application.
+For example, in our angular.json there are two configurations of the app.
 `ng-lazy-plugins` without plug-ins, and `ng-lazy-plugins-example` with plug-ins.
 ```json
 {
@@ -46,7 +46,7 @@ For example, in our angular.json there are two configurations of the application
 
 Next, you need to create a plugin
 ```typescript
-// You must use the token to provide the component to the main application
+// Use token to provide the main application with the component
 import { PLUGIN_PROVIDER } from 'src/core';
 
 @Component({
@@ -80,7 +80,7 @@ export class ExamplePluginModule {}
 
 ### Using DynamicNgModuleFactoryLoader to download plugins
 
-You must use DynamicNgModuleFactoryLoader to load the plugin
+Use DynamicNgModuleFactoryLoader to load the plugin
 ```typescript
 import { DynamicNgModuleFactoryLoader, PLUGIN_PROVIDER, PluginManifest } from 'src/core';
 
@@ -90,7 +90,7 @@ export class AppComponent {
     private injector: Injector,
     private ngModuleFactoryLoader: DynamicNgModuleFactoryLoader
   ) {
-    // you must specify a manifest to load the module
+    // you should specify a manifest to load the module
     const manifest: PluginManifest = new PluginManifest({
       id: './src/plugins/example/example.module',
       name: 'ExamplePluginModule',
@@ -119,9 +119,9 @@ export class AppComponent {
 }
 ```
 
-After all this, you can safely re-build plugins via `npm build ng-lazy-plugins-example --prod`.
+All of this, you can safely re-build plugins via `npm build ng-lazy-plugins-example --prod`.
 You will get the compiled plugins in the directory with the build:
  + src-plugins-example-example-module-ts-ngfactory.js
  + src-plugins-example2-example2-module-ts-ngfactory.js
 
-Just put them in the folder with your application.
+Just put them in the folder with your the app.
