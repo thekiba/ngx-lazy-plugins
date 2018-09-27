@@ -35,7 +35,8 @@
                     <br> {{item.description}}
                 </div>
             </div>
-            <button class="btn btn-info" (click)="load(item.url, item.name)">Load</button>
+            <button *ngIf="item?.state !== 2" [clrLoading]="item?.state" class="btn btn-info-outline" (click)="loadEssential(item)">Load</button>
+            <button *ngIf="item?.state === 2" class="btn btn-success" (click)="loadEssential(item)">Loaded</button>
         </div>
 
         <p>Specific plugin</p>
@@ -44,7 +45,7 @@
             <br>
             <input clrInput placeholder="url" name="url" [(ngModel)]="url" />
             <br>
-            <button type="button" class="btn btn-primary" (click)="load(name, url)">Load</button>
+            <button [clrLoading]="specificstate" type="button" class="btn btn-primary" (click)="loadSpecific(name, url)">Load</button>
         </form>
     </div>
 
